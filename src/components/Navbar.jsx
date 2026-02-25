@@ -1,36 +1,48 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="flex items-center justify-between px-8 py-4 bg-slate-900 text-white shadow-md">
-      
-      {/* Left Side: Logo and Title */}
-      <div className="flex items-center space-x-3 cursor-pointer">
-        <div className="bg-blue-600 p-2 rounded-lg">
-          {/* Movie Reel SVG Icon */}
-         
+    <nav className="w-full bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+      <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+        
+        <div className="flex items-center gap-3 cursor-pointer group">
+        
+          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 rounded-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+            <span className="text-white text-lg">🎬</span>
+          </div>
+
+          <h1 className="text-xl font-semibold tracking-tight text-white">
+            Cine<span className="text-blue-500">Match</span>
+          </h1>
         </div>
-        <h1 className="text-2xl font-black tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-          CineMatch
-        </h1>
-      </div>
 
-      {/* Right Side: Navigation Links */}
-      <div className="flex space-x-10 items-center">
-        <Link to="/" className="text-sm font-semibold text-gray-300 hover:text-blue-400 transition-all duration-300 uppercase tracking-wide">
-          Movies
-        </Link>
-        <Link to="/watchlist" className="text-sm font-semibold text-gray-300 hover:text-blue-400 transition-all duration-300 uppercase tracking-wide">
-          Watchlist
-        </Link>
-        <Link to="/mood" className="text-sm font-semibold text-gray-300 hover:text-blue-400 transition-all duration-300 uppercase tracking-wide">
-          Mood Selector
-        </Link>
-      </div>
+        <div className="flex items-center gap-8">
+          <Link
+            to="/"
+            className="relative text-sm font-medium text-slate-300 hover:text-white transition duration-300 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            Movies
+          </Link>
 
+          <Link
+            to="/watchlist"
+            className="relative text-sm font-medium text-slate-300 hover:text-white transition duration-300 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            Watchlist
+          </Link>
+
+          <Link
+            to="/mood"
+            className="relative text-sm font-medium text-slate-300 hover:text-white transition duration-300 after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-blue-500 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            Mood Selector
+          </Link>
+        </div>
+
+      </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
