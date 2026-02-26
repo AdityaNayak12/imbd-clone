@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Link} from 'react-router-dom'
 
 function Banner() {
     return (
@@ -23,13 +24,13 @@ function Banner() {
 
                 {/* CTA Buttons */}
                 <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                    <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-medium transition duration-300">
+                    <Link to="/" className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-medium transition duration-300">
                         Explore Movies
-                    </button>
+                    </Link>
 
-                    <button className="px-6 py-3 border border-gray-400 hover:border-white rounded-lg text-lg font-medium transition duration-300">
+                    <Link to="/mood" className="px-6 py-3 border border-gray-400 hover:border-white rounded-lg text-lg font-medium transition duration-300">
                         Try Mood Selector
-                    </button>
+                    </Link>
                 </div>
 
             </div>
