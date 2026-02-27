@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "./Banner";
+import axios from "axios"
 
-function MovieCard() {
+function MovieCard({ movieTitle, movieDescription, imageUrl }) {
     return (
         <div className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-300 cursor-pointer">
 
             {/* Image Placeholder */}
-            <div className="h-64 bg-slate-800 flex items-center justify-center text-gray-500">
-                Poster
+            <div className="w-full aspect-[2/3] overflow-hidden">
+                <img
+                    src={`https://image.tmdb.org/t/p/w500${imageUrl}`}
+                    alt={movieTitle}
+                    className="w-full h-full object-cover"
+                />
             </div>
+
 
             {/* Content */}
             <div className="p-4">
                 <h3 className="text-lg font-semibold text-white">
-                    Random Movie Title
+                    {movieTitle}
                 </h3>
 
                 <p className="text-sm text-gray-400 mt-2">
-                    Some short description about this movie. Just placeholder text for now.
+                    {movieDescription}
                 </p>
 
                 <div className="mt-3 text-xs text-blue-400 font-medium">
@@ -29,6 +35,19 @@ function MovieCard() {
 }
 
 function Movies() {
+
+    const [movies, setMovies] = useState([]);
+    useEffect(() => {
+        async function getMovie() {
+            let res = await axios.get(
+                `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US&page=1`)
+
+            setMovies(res.data.results)
+        }
+
+        getMovie()
+    }, [])
+
     return (
         <>
             <Banner />
@@ -46,10 +65,9 @@ function Movies() {
                         lg:grid-cols-4 
                         xl:grid-cols-5">
 
-                    {/* Temporary static cards */}
-                    {Array.from({ length: 10 }).map((_, index) => (
-                        <MovieCard key={index} />
-                    ))}
+                    {movies.map((movie) => {
+                        return <MovieCard movieTitle={movie.title} movieDescription={movie.overview} imageUrl={movie.poster_path} />
+                    })}
 
                 </div>
             </div>
