@@ -37,16 +37,21 @@ function MovieCard({ movieTitle, movieDescription, imageUrl }) {
 function Movies() {
 
     const [movies, setMovies] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     useEffect(() => {
         async function getMovie() {
             let res = await axios.get(
-                `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US&page=1`)
+                `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US&page=${page}`);
 
-            setMovies(res.data.results)
+            setMovies(res.data.results);
+            setTotalPages(res.data.total_pages);
+
+            window.scrollTo({top: 0,behavior: "smooth"});
         }
 
         getMovie()
-    }, [])
+    }, [page])
 
     return (
         <>
@@ -68,6 +73,31 @@ function Movies() {
                     {movies.map((movie) => {
                         return <MovieCard movieTitle={movie.title} movieDescription={movie.overview} imageUrl={movie.poster_path} />
                     })}
+
+                </div>
+                <div className="flex justify-center items-center gap-6 mt-12">
+
+                    {/* Previous Button */}
+                    <button
+                        onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                        disabled={page === 1}
+                        className="px-4 py-2 bg-slate-800 text-white rounded-lg disabled:opacity-40 hover:bg-slate-700 transition"
+                    >
+                        Previous
+                    </button>
+
+                    <span className="text-white font-medium">
+                        Page {page}
+                    </span>
+
+                    {/* Next Button */}
+                    <button
+                        onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+                        disabled={page === totalPages}
+                        className="px-4 py-2 bg-slate-800 text-white rounded-lg disabled:opacity-40 hover:bg-slate-700 transition"
+                    >
+                        Next
+                    </button>
 
                 </div>
             </div>
