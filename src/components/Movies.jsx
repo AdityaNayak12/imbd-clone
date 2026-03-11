@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import Banner from "./Banner";
 import axios from "axios"
 
-function MovieCard({ movieTitle, movieDescription, imageUrl }) {
+function MovieCard({ movieTitle, movieDescription, imageUrl, genreIds, genreMap }) { 
+    const genres = genreIds
+        ?.slice(0, 2)
+        .map(id => genreMap[id])
+        .filter(Boolean)
+        .join(" • ");
+
     return (
         <div className="bg-slate-900 rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-300 cursor-pointer">
 
-            {/* Image Placeholder */}
             <div className="w-full aspect-[2/3] overflow-hidden">
                 <img
                     src={`https://image.tmdb.org/t/p/w500${imageUrl}`}
@@ -15,8 +20,6 @@ function MovieCard({ movieTitle, movieDescription, imageUrl }) {
                 />
             </div>
 
-
-            {/* Content */}
             <div className="p-4">
                 <h3 className="text-lg font-semibold text-white">
                     {movieTitle}
@@ -27,7 +30,7 @@ function MovieCard({ movieTitle, movieDescription, imageUrl }) {
                 </p>
 
                 <div className="mt-3 text-xs text-blue-400 font-medium">
-                    Action • Drama
+                    {genres}
                 </div>
             </div>
         </div>
@@ -37,9 +40,13 @@ function MovieCard({ movieTitle, movieDescription, imageUrl }) {
 function Movies() {
 
     const [movies, setMovies] = useState([]);
+    const [genreMap, setGenreMap] = useState({});
+
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
     useEffect(() => {
+
         async function getMovie() {
             let res = await axios.get(
                 `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_API_KEY}&language=en-US&page=${page}`);
@@ -47,10 +54,25 @@ function Movies() {
             setMovies(res.data.results);
             setTotalPages(res.data.total_pages);
 
-            window.scrollTo({top: 0,behavior: "smooth"});
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
-        getMovie()
+        async function getGenres() {
+            let res = await axios.get(
+                `https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
+            );
+
+            const map = {};
+            res.data.genres.forEach((g) => {
+                map[g.id] = g.name;
+            });
+
+            setGenreMap(map);
+        }
+
+        getMovie();
+        getGenres();
+
     }, [page])
 
     return (
@@ -71,13 +93,20 @@ function Movies() {
                         xl:grid-cols-5">
 
                     {movies.map((movie) => {
-                        return <MovieCard movieTitle={movie.title} movieDescription={movie.overview} imageUrl={movie.poster_path} />
+                        return (
+                            <MovieCard
+                                key={movie.id} 
+                                movieTitle={movie.title}
+                                movieDescription={movie.overview}
+                                imageUrl={movie.poster_path}
+                                genreIds={movie.genre_ids} 
+                                genreMap={genreMap}
+                            />
+                        )
                     })}
 
                 </div>
                 <div className="flex justify-center items-center gap-6 mt-12">
-
-                    {/* Previous Button */}
                     <button
                         onClick={() => setPage(prev => Math.max(prev - 1, 1))}
                         disabled={page === 1}
@@ -89,8 +118,6 @@ function Movies() {
                     <span className="text-white font-medium">
                         Page {page}
                     </span>
-
-                    {/* Next Button */}
                     <button
                         onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
                         disabled={page === totalPages}
@@ -102,7 +129,6 @@ function Movies() {
                 </div>
             </div>
         </>
-
     )
 }
 
